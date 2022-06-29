@@ -1,0 +1,1 @@
+DOCS.md is licensed GPLv3 by Zughy. it is from arena_lib
