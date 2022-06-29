@@ -1,6 +1,5 @@
 Thanks for downloading and try this mod <3 "MrFreeman"
 
-the song that i insert in the folder "sounds" is Jeremy Blake - Powerup! and it's a No Copyright Music, and you can use it and sharing it without worries.
 
 # HOW TO INSTALL THE MOD:
 After the download of the mod, put it inside the folder "mods", enable this mod and follow these steps in the game:
