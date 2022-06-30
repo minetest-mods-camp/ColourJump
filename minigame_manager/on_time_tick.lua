@@ -74,8 +74,8 @@ function randomBlocks()
                 table.insert(takenNumbers, checker)
         end
 
-        Blue.x = posBlue.x --3
-        Blue.z = posBlue.z --75
+        Blue.x = posBlue.x
+        Blue.z = posBlue.z
 
         Red.x = posRed.x
         Red.z = posRed.z
@@ -129,7 +129,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
 
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
-                if player:getpos().y < 30 then
+                if player:getpos().y < Red.y-4 then
                         arena_lib.remove_player_from_arena( pl_name , 1 )
                 end
         end
