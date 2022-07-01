@@ -56,6 +56,16 @@ function randomBlocks()
         local posBlack = {x = Black.x, y = Black.y, z = Black.z}
         local posWhite = {x = White.x, y = White.y, z = White.z}
 
+        local positions = {{x = Blue.x, z = Blue.z},
+        {x = Red.x, z = Red.z},
+        {x = Pink.x, z = Pink.z},
+        {x = Brown.x, z = Brown.z},
+        {x = Yellow.x, z = Yellow.z},
+        {x = Orange.x, z = Orange.z},
+        {x = Green.x, z = Green.z},
+        {x = Black.x, z = Black.z},
+        {x = White.x, z = White.z}}
+
         local listNewPosPlatforms = {posRed,posBlue,posYellow,posOrange,posBrown,posPink, posGreen, posBlack, posWhite}
         maxCheck = 9
         minCheck = 1

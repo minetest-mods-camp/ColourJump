@@ -19,16 +19,7 @@ arena_lib.register_minigame( modname , {
                 Pink = {x = 3, y = 30, z = 70, name="wool:pink", id="Pink"},
                 Green = {x = 7, y = 30, z = 80, name="wool:green", id="Green"},
                 Black = {x = 3, y = 30, z = 80, name="wool:black", id="Black"},
-                White = {x = -1, y = 30, z = 80, name="wool:white", id="White"},
-                positions = {{x = 3, z = 75},
-                                {x = -1, z = 70},
-                                {x = -1, z = 75},
-                                {x = 7, z = 70},
-                                {x = 7, z = 75},
-                                {x = 3, z = 70 },
-                                {x = 7, z = 80 },
-                                {x = 3, z = 80 },
-                                {x = -1, z = 80 }}
+                White = {x = -1, y = 30, z = 80, name="wool:white", id="White"}
         },
 
         prefix = "["..modname.."] ",
