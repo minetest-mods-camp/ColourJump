@@ -1,26 +1,25 @@
 -- * @author         MrFreeman
 -- * @modifiedBy     MrFreeman
 -- * @maintainedBy   MrFreeman
--- * @version        1.0
+-- * @version        2.0
 -- * @created        2022-06-25
--- * @modified       2022-06-26
+-- * @modified       2022-07-05
 
 local modname = "colour_jump"
 arena_lib.register_minigame( modname , {
 
         properties = {
-
-                items = { "Red", "Yellow", "Blue", "Orange", "Brown", "Pink", "Green", "Black", "White" },
-                Red = {x = 3, y = 30, z = 75, name="wool:red", id="Red"},
-                Blue = {x = -1, y = 30, z = 70, name = "wool:blue", id="Blue"},
-                Yellow = {x = -1, y = 30, z = 75, name = "wool:yellow", id="Yellow"},
-                Orange = {x = 7, y = 30, z = 70, name="wool:orange", id="Orange"},
-                Brown = {x = 7, y = 30, z = 75, name="wool:brown", id="Brown"},
-                Pink = {x = 3, y = 30, z = 70, name="wool:pink", id="Pink"},
-                Green = {x = 7, y = 30, z = 80, name="wool:green", id="Green"},
-                Black = {x = 3, y = 30, z = 80, name="wool:black", id="Black"},
-                White = {x = -1, y = 30, z = 80, name="wool:white", id="White"}
-        },
+                arenaCol_Red = {x = 5, z = 69, name="wool:red", id="Red"},
+                arenaCol_Blue = {x = 1, z = 69, name = "wool:blue", id="Blue"},
+                arenaCol_Yellow = {x = -3, z = 69, name = "wool:yellow", id="Yellow"},
+                arenaCol_Orange = {x = -3, z = 74, name="wool:orange", id="Orange"},
+                arenaCol_Brown = {x = 1, z = 74, name="wool:brown", id="Brown"},
+                arenaCol_Pink = {x = 5, z = 74, name="wool:pink", id="Pink"},
+                arenaCol_Green = {x = 5, z = 79, name="wool:green", id="Green"},
+                arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black"},
+                arenaCol_White = {x = -3, z = 79, name="wool:white", id="White"},
+                arena_y = 30
+            },
 
         prefix = "["..modname.."] ",
         time_mode = 'incremental',
