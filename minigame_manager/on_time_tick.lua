@@ -64,10 +64,6 @@ end
         if ((arena.current_time % 5) == 0) then
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
-                
-        for prop_nome,prop in pairs(arena) do
-
-        end
                 arena_lib.HUD_send_msg_all("title", arena, tostring(items[itemList]), 3, nil, "0xB6D53C")
                 minetest.after(2.5, function() 
                         for prop,props in pairs(newPosPlatformsList) do
