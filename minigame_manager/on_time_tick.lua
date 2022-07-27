@@ -74,11 +74,27 @@ end
                         newPosPlatformsList = {}
                 end, 'Done')
         end
+        local countPeopleFallen = 0
 
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
                 if player:getpos().y < arena_y-4 then
-                        arena_lib.remove_player_from_arena( pl_name , 1 )
+                        countPeopleFallen = countPeopleFallen + 1
                 end
         end
+
+        if (countPeopleFallen == numberOfPlayers) and numberOfPlayers ~= 1 then
+                arena_lib.HUD_send_msg_all("title", arena, 'All the players fallen down! Nobody won', 3, nil, "0xB6D53C")
+                minetest.after(2.5, function() 
+                        arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
+                end, 'Done')
+        else
+                for pl_name in pairs(arena.players) do
+                        local player = minetest.get_player_by_name(pl_name)
+                        if player:getpos().y < arena_y-4 then
+                                arena_lib.remove_player_from_arena( pl_name , 1 )
+                        end
+                end
+        end
+
 end)
