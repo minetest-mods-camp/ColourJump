@@ -3,7 +3,7 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        2.0
 -- * @created        2022-06-25
--- * @modified       2022-07-05
+-- * @modified       2022-07-31
 
 -- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
 local function contains(table, val)
@@ -13,6 +13,20 @@ local function contains(table, val)
            end
         end
         return false
+end
+
+local showTimer = false
+local function printTimer(time, player, showTimer)
+        local valueCounter = math.floor(time)
+        if showTimer then
+                if valueCounter >= 0 then
+                        counterOfTimer = counterOfTimer+1
+                        valueCounter = valueCounter - (math.floor(counterOfTimer / numberOfPlayers))
+                        if valueCounter >= 0 then
+                                arena_lib.HUD_send_msg("hotbar", player,'The platforms disappear in: ' .. tostring(valueCounter) .. ' SECS!', 1 ,nil,0xFFFFFF)
+                        end       
+                end
+        end
 end
 
 local itemList = 1
@@ -61,11 +75,20 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         takenNumbers[i] = nil
                 end
 end
-        if ((arena.current_time % 5) == 0) then
+        if ((arena.current_time % 10) == 0) then
+                counterOfTimer = 0
+                valueCounter = math.floor(timerToRemovePlatforms)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
-                arena_lib.HUD_send_msg_all("title", arena, tostring(items[itemList]), 3, nil, "0xB6D53C")
-                minetest.after(2.5, function() 
+                if timerToRemovePlatforms ~= 2.5 then
+                        timerToRemovePlatforms = timerToRemovePlatforms - 0.1
+                else
+                        timerToRemovePlatforms = 2.5
+                end
+                timeScreen = timerToRemovePlatforms
+                arena_lib.HUD_send_msg_all("title", arena, tostring(items[itemList]) , 3, nil, "0xB6D53C")
+                showTimer = true
+                minetest.after(timerToRemovePlatforms, function() 
                         for prop,props in pairs(newPosPlatformsList) do
                                         if props.id ~= tostring(items[itemList]) then
                                                 set_platform_air(props)
@@ -78,6 +101,7 @@ end
 
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
+                printTimer(timeScreen, pl_name, showTimer)
                 if player:getpos().y < arena_y-4 then
                         countPeopleFallen = countPeopleFallen + 1
                 end

@@ -3,13 +3,16 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        2.0
 -- * @created        2022-06-25
--- * @modified       2022-07-05
+-- * @modified       2022-07-31
 
 arena_lib.on_load("colour_jump", function(arena)
         items = {}
         arena_y = arena.arena_y
         numberPlatforms = 0
         numberOfPlayers = 0
+        timerToRemovePlatforms = arena.timerToRemovePlatforms
+        timeScreen = arena.timerToRemovePlatforms
+        counterOfTimer = 0 
 
         function set_platform(colour)
                 local poss = {}

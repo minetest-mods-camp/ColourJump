@@ -3,7 +3,7 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        2.0
 -- * @created        2022-06-25
--- * @modified       2022-07-05
+-- * @modified       2022-07-31
 
 local modname = "colour_jump"
 arena_lib.register_minigame( modname , {
@@ -18,7 +18,8 @@ arena_lib.register_minigame( modname , {
                 arenaCol_Green = {x = 5, z = 79, name="wool:green", id="Green"},
                 arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black"},
                 arenaCol_White = {x = -3, z = 79, name="wool:white", id="White"},
-                arena_y = 30
+                arena_y = 30,
+                timerToRemovePlatforms = 7.1
             },
 
         prefix = "["..modname.."] ",
