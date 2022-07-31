@@ -23,7 +23,7 @@ local function printTimer(time, player, showTimer)
                         counterOfTimer = counterOfTimer+1
                         valueCounter = valueCounter - (math.floor(counterOfTimer / numberOfPlayers))
                         if valueCounter >= 0 then
-                                arena_lib.HUD_send_msg("hotbar", player,'The platforms disappear in: ' .. tostring(valueCounter) .. ' SECS!', 1 ,nil,0xFFFFFF)
+                                arena_lib.HUD_send_msg("hotbar", player, colour_jump.T('The platforms disappear in: ') .. tostring(valueCounter) .. colour_jump.T(' SECS!'), 1 ,nil,0xFFFFFF)
                         end       
                 end
         end
@@ -86,7 +86,7 @@ end
                         timerToRemovePlatforms = 2.5
                 end
                 timeScreen = timerToRemovePlatforms
-                arena_lib.HUD_send_msg_all("title", arena, tostring(items[itemList]) , 3, nil, "0xB6D53C")
+                arena_lib.HUD_send_msg_all("title", arena, tostring(colour_jump.T(items[itemList])) , 3, nil, "0xB6D53C")
                 showTimer = true
                 minetest.after(timerToRemovePlatforms, function() 
                         for prop,props in pairs(newPosPlatformsList) do
@@ -108,7 +108,7 @@ end
         end
 
         if (countPeopleFallen == numberOfPlayers) and numberOfPlayers ~= 1 then
-                arena_lib.HUD_send_msg_all("title", arena, 'All the players fallen down! Nobody won', 3, nil, "0xB6D53C")
+                arena_lib.HUD_send_msg_all("title", arena, colour_jump.T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
                 minetest.after(2.5, function() 
                         arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
                 end, 'Done')

@@ -6,6 +6,8 @@
 -- * @modified       2022-07-31
 
 local modname = "colour_jump"
+colour_jump = {}
+colour_jump.T = minetest.get_translator("colour_jump")
 arena_lib.register_minigame( modname , {
 
         properties = {

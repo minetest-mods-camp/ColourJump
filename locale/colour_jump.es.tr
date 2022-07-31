@@ -1,0 +1,30 @@
+# version 2.0
+# author(s): MrFreeman
+# reviewer(s):MrFreeman
+# textdomain: colour_jump
+# @n means "newline", while @1, @2 ecc. are in-game parameters 
+
+# In-game messages
+
+The minigame will start in a few seconds!=¡El minijuego comenzará en unos segundos!
+To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!=¡Para ganar, tienes que ser el último en pie! Llega a la plataforma correcta cuando se muestre en tu pantalla... ¡BUENA SUERTE!
+Congrats! You won the game!!=¡Felicitaciones! ¡¡Ganaste el juego!!
+The platforms disappear in: =Las plataformas desaparecen en: 
+ SECS!= SEGUNDOS!
+Red=Rojo
+Blue=Azul
+Yellow=Amarillo
+Orange=Naranja
+Brown=Marrón
+Pink=Rosa
+Green=Verde
+Black=Negro
+White=Blanco
+
+All the players fallen down! Nobody won=¡Todos los jugadores caídos! nadie ganó
+
+# Commands messages
+You cannot quit!=¡No puedes renunciar!
+
+# Others
+Spectator=Espectador*

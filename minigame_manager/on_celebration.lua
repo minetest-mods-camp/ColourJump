@@ -8,7 +8,7 @@
 arena_lib.on_celebration("colour_jump", function(arena, winner_name)
 
         if type(winner_name) == "string" then
-                minetest.chat_send_player(winner_name, "Congrats! You won the game!!")
+                minetest.chat_send_player(winner_name, colour_jump.T("Congrats! You won the game!!"))
         end
         -- note that winner_name would be a table, if teams are enabled.
 end)
