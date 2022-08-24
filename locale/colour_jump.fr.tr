@@ -21,9 +21,11 @@ Green=Vert
 Black=Noir
 White=Blanc
 All the players fallen down! Nobody won=Tous les joueurs sont tombés ! Personne n'a gagné
+Lap: =Tour: 
 
 # Commands messages
 You cannot quit!=Vous ne pouvez pas abandonner!
+[!] No data for that arena or that arena does not exist!=[!] Aucune donnée pour cette arène ou cette arène n'existe pas!
 
 # Others
 Spectator=Spectateur

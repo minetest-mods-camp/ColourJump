@@ -22,9 +22,11 @@ Black=Negro
 White=Blanco
 
 All the players fallen down! Nobody won=¡Todos los jugadores caídos! nadie ganó
+Lap: =Vuelta: 
 
 # Commands messages
 You cannot quit!=¡No puedes renunciar!
+[!] No data for that arena or that arena does not exist!=[!] ¡No hay datos para esa arena o esa arena no existe!
 
 # Others
 Spectator=Espectador*

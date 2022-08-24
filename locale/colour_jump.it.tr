@@ -21,9 +21,11 @@ Green=Verde
 Black=Nero
 White=Bianco
 All the players fallen down! Nobody won=Tutti i giocatori sono caduti! Nessuno ha vinto
+Lap: =Giro: 
 
 # Commands messages
 You cannot quit!=Non puoi uscire!
+[!] No data for that arena or that arena does not exist!=[!] Nessun dato per quell'arena o quell'arena non esiste!
 
 # Others
 Spectator=Spettatore

@@ -1,25 +1,27 @@
 -- * @author         MrFreeman
 -- * @modifiedBy     MrFreeman
 -- * @maintainedBy   MrFreeman
--- * @version        2.0
+-- * @version        3.0
 -- * @created        2022-06-25
--- * @modified       2022-07-31
+-- * @modified       2022-08-23
 
 local modname = "colour_jump"
 colour_jump = {}
+multi_scores = {}
+colour_jump.HUD = {}
 colour_jump.T = minetest.get_translator("colour_jump")
 arena_lib.register_minigame( modname , {
 
         properties = {
-                arenaCol_Red = {x = 5, z = 69, name="wool:red", id="Red"},
-                arenaCol_Blue = {x = 1, z = 69, name = "wool:blue", id="Blue"},
-                arenaCol_Yellow = {x = -3, z = 69, name = "wool:yellow", id="Yellow"},
-                arenaCol_Orange = {x = -3, z = 74, name="wool:orange", id="Orange"},
-                arenaCol_Brown = {x = 1, z = 74, name="wool:brown", id="Brown"},
-                arenaCol_Pink = {x = 5, z = 74, name="wool:pink", id="Pink"},
-                arenaCol_Green = {x = 5, z = 79, name="wool:green", id="Green"},
-                arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black"},
-                arenaCol_White = {x = -3, z = 79, name="wool:white", id="White"},
+                arenaCol_Red = {x = 5, z = 69, name="wool:red", id="Red", isActive=true},
+                arenaCol_Blue = {x = 1, z = 69, name = "wool:blue", id="Blue", isActive=true},
+                arenaCol_Yellow = {x = -3, z = 69, name = "wool:yellow", id="Yellow", isActive=true},
+                arenaCol_Orange = {x = -3, z = 74, name="wool:orange", id="Orange", isActive=true},
+                arenaCol_Brown = {x = 1, z = 74, name="wool:brown", id="Brown", isActive=true},
+                arenaCol_Pink = {x = 5, z = 74, name="wool:pink", id="Pink", isActive=true},
+                arenaCol_Green = {x = 5, z = 79, name="wool:green", id="Green", isActive=true},
+                arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black", isActive=true},
+                arenaCol_White = {x = -3, z = 79, name="wool:white", id="White", isActive=true},
                 arena_y = 30,
                 timerToRemovePlatforms = 7.1
             },
@@ -54,6 +56,7 @@ dofile(manager_path .. "on_celebration.lua")
 
 -- this callback runs about every second while the game is running (if time_mode == "incremental" or "decremental")
 dofile(manager_path .. "on_time_tick.lua")
+dofile(manager_path .. "leaderboard.lua")
 
 --====================================================
 --====================================================

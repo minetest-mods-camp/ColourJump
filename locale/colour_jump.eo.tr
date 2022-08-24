@@ -22,9 +22,11 @@ Black=Nigra
 White=Blanka
 
 All the players fallen down! Nobody won=Ĉiuj ludantoj falis! Neniu venkis
+Lap: =Rondiro: 
 
 # Commands messages
 You cannot quit!=Vi ne povas ĉesi!
+[!] No data for that arena or that arena does not exist!=[!] Neniuj datumoj por tiu areno aŭ tiu areno ne ekzistas!
 
 # Others
 Spectator=Spektanto
