@@ -171,7 +171,10 @@ end
                                 end
                                 colour_jump.store_scores(colour_jump.scores)
                                 for pl_name,stats in pairs(arena.players) do
-                                        minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+                                        local player = minetest.get_player_by_name(pl_name)
+                                        if player:getpos().y < arena_y-4 then
+                                                minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+                                        end
                                 end
                                         if colour_jump.HUD[pl_name] then
                                                 player:hud_remove(colour_jump.HUD[pl_name].scores)
