@@ -3,7 +3,7 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        3.0
 -- * @created        2022-06-25
--- * @modified       2022-08-23
+-- * @modified       2022-09-13
 
 local storage = minetest.get_mod_storage()
 
@@ -13,7 +13,7 @@ end
 function colour_jump.get_scores()
     return minetest.deserialize(storage:get_string("scores"))
 end
-colour_jump.scores =   {}
+colour_jump.scores = colour_jump.get_scores() or {}
 function colour_jump.get_leader_form(arena_name,sel_idx)
     local p_names = "<no data>"
     sel_idx = sel_idx or 1
