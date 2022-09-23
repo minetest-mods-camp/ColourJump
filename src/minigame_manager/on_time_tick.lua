@@ -3,7 +3,7 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        3.0
 -- * @created        2022-06-25
--- * @modified       2022-08-23
+-- * @modified       2022-09-23
 
 -- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
 local function contains(table, val)
@@ -22,7 +22,7 @@ local function printTimer(time, player, showTimer)
                 if valueCounter >= 0 then
                         counterOfTimer = counterOfTimer+1
                         valueCounter = valueCounter - (math.floor(counterOfTimer / numberOfPlayers))
-                        if valueCounter >= 0 then
+                        if valueCounter > 0 then
                                 arena_lib.HUD_send_msg("hotbar", player, colour_jump.T('The platforms disappear in: ') .. tostring(valueCounter) .. colour_jump.T(' SECS!'), 1 ,nil,0xFFFFFF)
                         end       
                 end
