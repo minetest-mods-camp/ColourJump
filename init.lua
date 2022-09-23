@@ -44,11 +44,11 @@ local path = minetest.get_modpath(modname)
 
 
 if not minetest.get_modpath("lib_chatcmdbuilder") then
-        dofile(path .. "/libraries/chatcmdbuilder.lua")
+        dofile(path .. "/src/libraries/chatcmdbuilder.lua")
 end
 
 -- this callback runs when the game starts and it has been loaded
-local manager_path = path .. "/minigame_manager/"
+local manager_path = path .. "/src/minigame_manager/"
 dofile(manager_path .. "on_load.lua")
 
 -- this callback runs when a winner is decided
