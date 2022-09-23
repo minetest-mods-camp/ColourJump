@@ -43,7 +43,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 for prop_nome,prop in pairs(arena) do
                         if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
                                 local values = {}
-                                values = {x = tonumber(prop.x), y = tonumber(arena_y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name)}
+                                values = {x = tonumber(prop.x), y = tonumber(arena_y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
                                 table.insert(listValues, values)
                         end
                 end
@@ -65,6 +65,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 newPosPlatform.id = listValues[checker].id
                                 newPosPlatform.name = listValues[checker].name
                                 newPosPlatform.isActive = listValues[checker].isActive
+                                newPosPlatform.hexColor = listValues[checker].hexColor
                                 set_platform(newPosPlatform)                   
                         end
                         table.insert(takenNumbers, checker)
@@ -94,7 +95,12 @@ end
                         timerToRemovePlatforms = 2.5
                 end
                 timeScreen = timerToRemovePlatforms
-                arena_lib.HUD_send_msg_all("title", arena, tostring(colour_jump.T(items[itemList])) , 3, nil, "0xB6D53C")
+                for prop,props in pairs(newPosPlatformsList) do
+                        if props.id == tostring(items[itemList]) then
+                                arena_lib.HUD_send_msg_all("title", arena, tostring(colour_jump.T(items[itemList])) , 3, nil, tonumber(props.hexColor))
+                        end
+                end
+                
                 showTimer = true
                 minetest.after(timerToRemovePlatforms, function() 
                         for prop,props in pairs(newPosPlatformsList) do
