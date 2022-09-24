@@ -22,7 +22,7 @@ local function printTimer(time, player, showTimer)
                 if valueCounter >= 0 then
                         counterOfTimer = counterOfTimer+1
                         valueCounter = valueCounter - (math.floor(counterOfTimer / numberOfPlayers))
-                        if valueCounter > 0 then
+                        if valueCounter > 0 and counterOfRounds ~= 0 then
                                 arena_lib.HUD_send_msg("hotbar", player, colour_jump.T('The platforms disappear in: ') .. tostring(valueCounter) .. colour_jump.T(' SECS!'), 1 ,nil,0xFFFFFF)
                         end       
                 end
