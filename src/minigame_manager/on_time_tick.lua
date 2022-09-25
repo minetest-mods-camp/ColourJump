@@ -17,7 +17,7 @@ local timeScreen = 0
 local counterOfTimer = 0 
 local counterOfRounds = 0 
 local mode = 'singleplayer'
-
+colour_jump.HUD_BACKGROUND = {}
 
 local function contains(table, val)
         for i=1,#table do
@@ -194,6 +194,7 @@ end
                         local player = minetest.get_player_by_name(pl_name)
                         if colour_jump.HUD[pl_name] then
                                 player:hud_remove(colour_jump.HUD[pl_name].scores)
+                                player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
                                 colour_jump.HUD[pl_name] = nil
                         end
                 end
@@ -204,21 +205,38 @@ end
                                 local player = minetest.get_player_by_name(pl_name)
                                 if isGameOver ~= true then 
                                         if not colour_jump.HUD[pl_name] then
+                                                local new_hud_image = {}
+                                                new_hud_image.background = player:hud_add({
+                                                hud_elem_type = "image",
+                                                position  = {x = 1, y = 0},
+                                                offset = {x = -179, y = 32},                                            
+                                                name = "colour_jump_background",
+                                                text = "HUD_colour_jump_round_counter.png",
+                                                alignment = { x = 1.0},
+                                                scale     = { x = 1.15, y = 1.15},
+                                                z_index = 100                                            
+                                                })
+                                                colour_jump.HUD_BACKGROUND[pl_name] = new_hud_image
+
                                                 local new_hud = {}
                                                 new_hud.scores = player:hud_add({
                                                 hud_elem_type = "text",
-                                                position  = { x = 1, y = 0.5 },
-                                                offset    = { x = -25 },
-                                                alignment = { x = -1 },
+                                                position  = {x = 1, y = 0},
+                                                offset = {x = -155, y = 42},                                          
+                                                alignment = {x = 1.0},
+                                                scale = {x = 2, y = 2},                                            
                                                 name = "colour_jump_highscores",
                                                 text = colour_jump.T('Lap: ') .. counterOfRounds,
-                                                size     = { x = 4 },
-                                                number    = "0xe6482e"
+                                                z_index = 100,
+                                                number    = "0xFFFFFF"
                                                 })
                                                 colour_jump.HUD[pl_name] = new_hud
+
                                         else
-                                                local id = colour_jump.HUD[pl_name].scores
-                                                player:hud_change(id, "text", stringOfRoundHUD)
+                                                local idText = colour_jump.HUD[pl_name].scores
+                                                player:hud_change(idText, "text", stringOfRoundHUD)
+                                                local idBackground = colour_jump.HUD_BACKGROUND[pl_name].background
+                                                player:hud_change(idBackground, "text", "HUD_colour_jump_round_counter.png")
                                         end
                                 end
                        
@@ -251,6 +269,7 @@ end
                                 end
                                         if colour_jump.HUD[pl_name] then
                                                 player:hud_remove(colour_jump.HUD[pl_name].scores)
+                                                player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
                                                 colour_jump.HUD[pl_name] = nil
                                         end
                                         arena_lib.remove_player_from_arena( pl_name , 1 )
