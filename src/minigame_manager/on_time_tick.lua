@@ -141,12 +141,13 @@ end
                                                 local new_hud = {}
                                                 new_hud.scores = player:hud_add({
                                                 hud_elem_type = "text",
-                                                position = {x = 0, y = 1},
+                                                position  = { x = 1, y = 0.5 },
+                                                offset    = { x = -25 },
+                                                alignment = { x = -1 },
                                                 name = "colour_jump_highscores",
                                                 text = colour_jump.T('Lap: ') .. counterOfRounds,
-                                                scale = {x = 3, y = 3},
-                                                alignment = {x = 1, y = -1},
-                                                offset = {x = 5, y = -5}
+                                                size     = { x = 4 },
+                                                number    = "0xe6482e"
                                                 })
                                                 colour_jump.HUD[pl_name] = new_hud
                                         else
