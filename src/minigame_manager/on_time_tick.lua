@@ -37,6 +37,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 isGameOver = true
         end
         local scores = arena.multi_scores   
+        local decreaserTimerPlatforms = arena.timerToDecreaseTimeOfPlatforms
         local score = counterOfRounds
         local stringOfRoundHUD = colour_jump.T('Lap: ').. score .. "\n"
         function randomBlocks()
@@ -89,8 +90,8 @@ end
                 valueCounter = math.floor(timerToRemovePlatforms)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
-                if timerToRemovePlatforms ~= 2.5 then
-                        timerToRemovePlatforms = timerToRemovePlatforms - 0.1
+                if timerToRemovePlatforms > 2.5 then
+                        timerToRemovePlatforms = timerToRemovePlatforms - decreaserTimerPlatforms
                 else
                         timerToRemovePlatforms = 2.5
                 end
