@@ -3,23 +3,23 @@
 -- * @maintainedBy   MrFreeman
 -- * @version        3.0
 -- * @created        2022-06-25
--- * @modified       2022-08-23
+-- * @modified       2022-08-25
 
 arena_lib.on_load("colour_jump", function(arena)
-        isGameOver = false
-        items = {}
-        arena_y = arena.arena_y
-        numberPlatforms = 0
-        numberOfPlayers = 0
-        timerToRemovePlatforms = arena.timerToRemovePlatforms
-        timeScreen = arena.timerToRemovePlatforms
-        counterOfTimer = 0 
-        counterOfRounds = 0 
+        local isGameOver = false
+        local items = {}
+        local arena_y = arena.arena_y
+        local numberPlatforms = 0
+        local numberOfPlayers = 0
+        local timerToRemovePlatforms = arena.timerToRemovePlatforms
+        local timeScreen = arena.timerToRemovePlatforms
+        local counterOfTimer = 0 
+        local counterOfRounds = 0 
         arena.multi_scores = {}
-        mode = 'singleplayer'
+        local mode = 'singleplayer'
         colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
-        function set_platform(colour)
+       local  function set_platform(colour)
                 local poss = {}
                 for i = -1,1 do
                    for k = -1,1 do
@@ -29,7 +29,7 @@ arena_lib.on_load("colour_jump", function(arena)
                 minetest.bulk_set_node(poss, {name=colour.name})
              end
 
-        function set_platform_air(colour)
+        local function set_platform_air(colour)
         local poss = {}
         for i = -1,1 do
                 for k = -1,1 do
