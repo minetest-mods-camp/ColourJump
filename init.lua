@@ -24,7 +24,8 @@ arena_lib.register_minigame( modname , {
                 arenaCol_White = {x = -3, z = 79, name="wool:white", id="White", isActive=true, hexColor="0xFFFFFF"},
                 arena_y = 30,
                 timerToRemovePlatforms = 7.1,
-                timerToDecreaseTimeOfPlatforms = 0.1
+                timerToDecreaseTimeOfPlatforms = 0.1,
+                counterOfRounds = 0
             },
 
         prefix = "["..modname.."] ",

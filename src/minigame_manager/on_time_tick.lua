@@ -5,8 +5,6 @@
 -- * @created        2022-06-25
 -- * @modified       2022-09-25
 
--- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
-
 local isGameOver = false
 local items = {}
 local arena_y = 0
@@ -18,6 +16,8 @@ local counterOfTimer = 0
 local counterOfRounds = 0 
 local mode = 'singleplayer'
 colour_jump.HUD_BACKGROUND = {}
+
+-- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
 
 local function contains(table, val)
         for i=1,#table do
@@ -76,6 +76,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 timeScreen = arena.timerToRemovePlatforms
                 counterOfTimer = 0 
                 counterOfRounds = 0 
+                arena.counterOfRounds = 0
                 arena.multi_scores = {}
                 mode = 'singleplayer'
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
@@ -152,6 +153,7 @@ end
         if ((arena.current_time % 10) == 0 and isGameOver ~= true) then
                 counterOfTimer = 0
                 counterOfRounds = counterOfRounds + 1
+                arena.counterOfRounds = counterOfRounds
                 valueCounter = math.floor(timerToRemovePlatforms)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
