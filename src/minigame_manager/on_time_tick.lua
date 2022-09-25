@@ -157,10 +157,10 @@ end
                 valueCounter = math.floor(timerToRemovePlatforms)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
-                if timerToRemovePlatforms > 2.5 then
+                if timerToRemovePlatforms > arena.minValueOfTimer then
                         timerToRemovePlatforms = timerToRemovePlatforms - decreaserTimerPlatforms
                 else
-                        timerToRemovePlatforms = 2.5
+                        timerToRemovePlatforms = arena.minValueOfTimer
                 end
                 timeScreen = timerToRemovePlatforms
                 for prop,props in pairs(newPosPlatformsList) do

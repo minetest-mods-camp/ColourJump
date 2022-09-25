@@ -25,7 +25,8 @@ arena_lib.register_minigame( modname , {
                 arena_y = 30,
                 timerToRemovePlatforms = 7.1,
                 timerToDecreaseTimeOfPlatforms = 0.1,
-                counterOfRounds = 0
+                counterOfRounds = 0,
+                minValueOfTimer = 1.5,
             },
 
         prefix = "["..modname.."] ",
