@@ -11,7 +11,6 @@ local function random_blocks() end
 -- not to be any reason to keep them here as local values. This will also create
 -- issues when two or more arenas are in progress at the same time
 local items = {}
-local arena_y = 0
 local numberPlatforms = 0
 local show_timer = false
 local itemList = 1
@@ -26,6 +25,7 @@ arena_lib.on_load("colour_jump", function(arena)
 
     for prop_name, prop in pairs(arena) do
         if string.find(prop_name, "arenaCol_") and prop.isActive == true then
+            prop.y = arena.y
             set_platform(prop)
         end
     end
@@ -69,7 +69,7 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
             colour_jump.store_scores(colour_jump.scores)
             for pl_name,stats in pairs(arena.players) do
                     local player = minetest.get_player_by_name(pl_name)
-                    if player:getpos().y < arena.arena_y-4 then
+                    if player:getpos().y < arena.y -4 then
                             minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
                     end
             end
@@ -87,7 +87,6 @@ end)
 arena_lib.on_time_tick("colour_jump", function(arena)
         if arena.current_time == 1 then
                 items = {}
-                arena_y = arena.arena_y
                 numberPlatforms = 0
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
@@ -140,7 +139,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
 
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
-                if player:getpos().y < arena_y-4 then
+                if player:getpos().y < arena.y -4 then
                         countPeopleFallen = countPeopleFallen + 1
                 end
         end
@@ -197,7 +196,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                         end
                                 end
 
-                        if player:getpos().y < arena_y-4 then
+                        if player:getpos().y < arena.y -4 then
                                 local highscore = {[1]="",[2]=0}
                                 for pl_name,stats in pairs(arena.players) do
                                         if arena.rounds_counter > highscore[2] then
@@ -220,7 +219,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 colour_jump.store_scores(colour_jump.scores)
                                 for pl_name,stats in pairs(arena.players) do
                                         local player = minetest.get_player_by_name(pl_name)
-                                        if player:getpos().y < arena_y-4 then
+                                        if player:getpos().y < arena.y -4 then
                                                 minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
                                         end
                                 end
@@ -262,7 +261,7 @@ function set_platform(colour)
     local poss = {}
     for i = -1,1 do
         for k = -1,1 do
-            table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
+            table.insert(poss, vector.new(colour.x-i,colour.y,colour.z-k))
         end
     end
     minetest.bulk_set_node(poss, {name=colour.name})
@@ -272,7 +271,7 @@ function set_platform_air(colour)
     local poss = {}
     for i = -1,1 do
         for k = -1,1 do
-            table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
+            table.insert(poss, vector.new(colour.x-i,colour.y,colour.z-k))
         end
     end
     minetest.bulk_set_node(poss, {name="air"})
@@ -282,7 +281,7 @@ function random_blocks(arena)
     for prop_nome,prop in pairs(arena) do
         if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
             local values = {}
-            values = {x = tonumber(prop.x), y = tonumber(arena_y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
+            values = {x = tonumber(prop.x), y = tonumber(arena.y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
             table.insert(listValues, values)
         end
     end
@@ -299,7 +298,7 @@ function random_blocks(arena)
         if  (not contains(takenNumbers, checker)) then
             newPosPlatform = {}
             newPosPlatform.x = listValues[i].x
-            newPosPlatform.y = arena_y
+            newPosPlatform.y = arena.y
             newPosPlatform.z = listValues[i].z
             newPosPlatform.id = listValues[checker].id
             newPosPlatform.name = listValues[checker].name
