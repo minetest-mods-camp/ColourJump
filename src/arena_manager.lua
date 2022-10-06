@@ -98,7 +98,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
     end
 
     local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
-    local show_timer = false
 
     if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
         arena.rounds_counter = arena.rounds_counter + 1
@@ -116,7 +115,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
             end
         end
 
-        show_timer = true
+        arena.show_timer = true
         minetest.after(arena.timer_current, function()
             for prop,props in pairs(newPosPlatformsList) do
                 if props.id ~= tostring(items[right_platform_id]) then
@@ -127,7 +126,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         end, 'Done')
     end
 
-    if show_timer then
+    if arena.show_timer then
         arena.seconds_left = arena.seconds_left -1
         if arena.seconds_left > 0 then                                      -- TODO globalstep to display float values
             print_timer(arena.players, arena.seconds_left)
