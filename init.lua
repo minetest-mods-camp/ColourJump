@@ -44,5 +44,6 @@ end
 
 dofile(srcpath .. "arena_manager.lua")
 dofile(srcpath .. "commands.lua")
+dofile(srcpath .. "HUD.lua")
 dofile(srcpath .. "privs.lua")
 dofile(srcpath .. "GUI/leaderboard.lua")

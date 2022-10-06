@@ -15,7 +15,6 @@ local numberPlatforms = 0
 local show_timer = false
 local itemList = 1
 local listValues = {}
-colour_jump.HUD_BACKGROUND = {}
 
 
 arena_lib.on_load("colour_jump", function(arena)
