@@ -4,20 +4,20 @@ local function contains() end
 local function print_timer() end
 local function set_platform() end
 local function set_platform_air() end
+local function random_blocks() end
 
 
 -- TODO: these properties should be retrieved directly from the arena, there seem
--- not to be any reason to keep them here as local values
+-- not to be any reason to keep them here as local values. This will also create
+-- issues when two or more arenas are in progress at the same time
 local items = {}
 local arena_y = 0
 local numberPlatforms = 0
 local numberOfPlayers = 0
-colour_jump.HUD_BACKGROUND = {}
-
 local show_timer = false
-
 local itemList = 1
 local listValues = {}
+colour_jump.HUD_BACKGROUND = {}
 
 
 arena_lib.on_load("colour_jump", function(arena)
@@ -114,55 +114,12 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         end
 
         local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
-        local function randomBlocks()
-                for prop_nome,prop in pairs(arena) do
-                        if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
-                                local values = {}
-                                values = {x = tonumber(prop.x), y = tonumber(arena_y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
-                                table.insert(listValues, values)
-                        end
-                end
 
-                takenNumbers = {}
-                newPosPlatformsList = {}
-                checker = math.random(1, numberPlatforms)
-                for i=1,numberPlatforms do
-                        while (contains(takenNumbers, checker)) do
-                                checker = math.random(1, numberPlatforms)
-                                if not contains(takenNumbers, checker) then break end
-                        end
-
-                        if  (not contains(takenNumbers, checker)) then
-                                newPosPlatform = {}
-                                newPosPlatform.x = listValues[i].x
-                                newPosPlatform.y = arena_y
-                                newPosPlatform.z = listValues[i].z
-                                newPosPlatform.id = listValues[checker].id
-                                newPosPlatform.name = listValues[checker].name
-                                newPosPlatform.isActive = listValues[checker].isActive
-                                newPosPlatform.hexColor = listValues[checker].hexColor
-                                set_platform(newPosPlatform)
-                        end
-                        table.insert(takenNumbers, checker)
-                        table.insert(newPosPlatformsList, newPosPlatform)
-                end
-                for prop_nome,prop in pairs(arena) do
-                        if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
-                                if prop_nome == newPosPlatform.id then
-                                        prop = newPosPlatform
-                                end
-                        end
-                end
-
-                for i=1, #takenNumbers do
-                        takenNumbers[i] = nil
-                end
-            end
         if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
                 arena.rounds_counter = arena.rounds_counter + 1
                 arena.seconds_left = math.floor(arena.timer_current)
                 itemList =  math.random(1, numberPlatforms)
-                randomBlocks()
+                random_blocks(arena)
                 if arena.timer_current > arena.timer_min_duration then
                         arena.timer_current = arena.timer_current - arena.timer_decrease_value
                 else
@@ -297,7 +254,7 @@ end)
 
 --- LOCAL FUNCTIONS
 
--- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
+-- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn random_blocks() )
 function contains(table, val)
     for i=1,#table do
        if table[i] == val then
@@ -331,4 +288,49 @@ function set_platform_air(colour)
         end
     end
     minetest.bulk_set_node(poss, {name="air"})
+end
+
+function random_blocks(arena)
+    for prop_nome,prop in pairs(arena) do
+        if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
+            local values = {}
+            values = {x = tonumber(prop.x), y = tonumber(arena_y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
+            table.insert(listValues, values)
+        end
+    end
+
+    takenNumbers = {}
+    newPosPlatformsList = {}
+    checker = math.random(1, numberPlatforms)
+    for i=1,numberPlatforms do
+        while (contains(takenNumbers, checker)) do
+            checker = math.random(1, numberPlatforms)
+            if not contains(takenNumbers, checker) then break end
+        end
+
+        if  (not contains(takenNumbers, checker)) then
+            newPosPlatform = {}
+            newPosPlatform.x = listValues[i].x
+            newPosPlatform.y = arena_y
+            newPosPlatform.z = listValues[i].z
+            newPosPlatform.id = listValues[checker].id
+            newPosPlatform.name = listValues[checker].name
+            newPosPlatform.isActive = listValues[checker].isActive
+            newPosPlatform.hexColor = listValues[checker].hexColor
+            set_platform(newPosPlatform)
+        end
+        table.insert(takenNumbers, checker)
+        table.insert(newPosPlatformsList, newPosPlatform)
+    end
+    for prop_nome,prop in pairs(arena) do
+        if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
+            if prop_nome == newPosPlatform.id then
+                prop = newPosPlatform
+            end
+        end
+    end
+
+    for i=1, #takenNumbers do
+        takenNumbers[i] = nil
+    end
 end
