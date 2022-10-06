@@ -1,12 +1,7 @@
--- * @author         MrFreeman
--- * @modifiedBy     MrFreeman
--- * @maintainedBy   MrFreeman
--- * @version        3.0
--- * @created        2022-06-25
--- * @modified       2022-09-13
+local T = minetest.get_translator("colour_jump")
 
 arena_lib.on_celebration('colour_jump', function(arena, winner_name)
-    arena_lib.HUD_send_msg_all("title", arena, colour_jump.T('The game is over!'), 2 ,'colour_jump_win',0xAEAE00)
+    arena_lib.HUD_send_msg_all("title", arena, T('The game is over!'), 2 ,'colour_jump_win',0xAEAE00)
     for pl_name,stats in pairs(arena.players) do
         local player = minetest.get_player_by_name(pl_name)
         if colour_jump.HUD[pl_name] then
@@ -14,24 +9,24 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
             player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
             colour_jump.HUD[pl_name] = nil
         end
-        minetest.after(3, function() 
+        minetest.after(3, function()
             local highscore = {[1]="",[2]=0}
             for pl_name,stats in pairs(arena.players) do
-                    if arena.counterOfRounds > highscore[2] then
-                            highscore = {pl_name, arena.counterOfRounds}
+                    if arena.rounds_counter > highscore[2] then
+                            highscore = {pl_name, arena.rounds_counter}
                     end
             end
 
             local high = highscore[2]
             local l_data = {}
             for pl_name,stats in pairs(arena.players) do
-                    l_data[pl_name] = arena.counterOfRounds
+                    l_data[pl_name] = arena.rounds_counter
                     if colour_jump.scores[arena.name][pl_name] then
-                            if arena.counterOfRounds > colour_jump.scores[arena.name][pl_name] then
+                            if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
                                     colour_jump.scores[arena.name][pl_name] = high
                             end
                     else
-                            colour_jump.scores[arena.name][pl_name] = arena.counterOfRounds
+                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
                     end
             end
             colour_jump.store_scores(colour_jump.scores)

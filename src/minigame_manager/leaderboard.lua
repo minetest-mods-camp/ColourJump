@@ -1,10 +1,3 @@
--- * @author         MrFreeman
--- * @modifiedBy     MrFreeman
--- * @maintainedBy   MrFreeman
--- * @version        3.0
--- * @created        2022-06-25
--- * @modified       2022-09-13
-
 local storage = minetest.get_mod_storage()
 
 function colour_jump.store_scores(data)
@@ -132,19 +125,3 @@ function colour_jump.get_leader_form_endgame(arena_name,l_data,sel_idx,sel_idx2)
     "button[0.6,2.7;9.3,0.6;this;This Game]"..
     "button[0.6,5.5;9.3,0.6;high;LeaderBoard]"
 end
-
-minetest.register_chatcommand("colourjumpscores", {
-    params = "<arena name>",
-
-    description = "Show leaderboard",
-
-    func = function(name, param)
-        if param then
-            if colour_jump.scores[param] then
-                minetest.show_formspec(name, "cj_scores", colour_jump.get_leader_form(param))
-            else
-                return false, colour_jump.T('[!] No data for that arena or that arena does not exist!')
-            end
-        end
-    end,
-})

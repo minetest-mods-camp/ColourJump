@@ -1,9 +1,4 @@
--- * @author         MrFreeman
--- * @modifiedBy     MrFreeman
--- * @maintainedBy   MrFreeman
--- * @version        3.0
--- * @created        2022-06-25
--- * @modified       2022-08-25
+local T = minetest.get_translator("colour_jump")
 
 arena_lib.on_load("colour_jump", function(arena)
         local isGameOver = false
@@ -11,13 +6,10 @@ arena_lib.on_load("colour_jump", function(arena)
         local arena_y = arena.arena_y
         local numberPlatforms = 0
         local numberOfPlayers = 0
-        local timerToRemovePlatforms = arena.timerToRemovePlatforms
-        local timeScreen = arena.timerToRemovePlatforms
-        local counterOfTimer = 0 
-        local counterOfRounds = 0 
-        arena.multi_scores = {}
+        local counterOfTimer = 0
         local mode = 'singleplayer'
         colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
+        arena.timer_current = arena.timer_initial_duration
 
        local  function set_platform(colour)
                 local poss = {}
@@ -48,8 +40,8 @@ arena_lib.on_load("colour_jump", function(arena)
         end
 
         for pl_name,stats in pairs(arena.players) do
-                minetest.chat_send_player(pl_name, colour_jump.T("The minigame will start in a few seconds!"))
-                minetest.chat_send_player(pl_name, colour_jump.T("To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!"))
+                minetest.chat_send_player(pl_name, T("The minigame will start in a few seconds!"))
+                minetest.chat_send_player(pl_name, T("To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!"))
                 numberOfPlayers = numberOfPlayers + 1
         end
 
