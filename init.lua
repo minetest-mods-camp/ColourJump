@@ -42,10 +42,7 @@ if not minetest.get_modpath("lib_chatcmdbuilder") then
         dofile(srcpath .. "libraries/chatcmdbuilder.lua")
 end
 
+dofile(srcpath .. "arena_manager.lua")
 dofile(srcpath .. "commands.lua")
 dofile(srcpath .. "privs.lua")
-
--- this callback runs when the game starts and it has been loaded
-local manager_path = srcpath .. "/minigame_manager/"
-dofile(manager_path .. "arena_manager.lua")
-dofile(manager_path .. "leaderboard.lua")
+dofile(srcpath .. "GUI/leaderboard.lua")
