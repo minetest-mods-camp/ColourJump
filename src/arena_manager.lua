@@ -13,7 +13,6 @@ local function random_blocks() end
 local items = {}
 local numberPlatforms = 0
 local show_timer = false
-local itemList = 1
 local listValues = {}
 
 
@@ -104,7 +103,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
                 arena.rounds_counter = arena.rounds_counter + 1
                 arena.seconds_left = math.floor(arena.timer_current)
-                itemList =  math.random(1, numberPlatforms)
+                local right_platform_id = math.random(1, numberPlatforms)
                 random_blocks(arena)
                 if arena.timer_current > arena.timer_min_duration then
                         arena.timer_current = arena.timer_current - arena.timer_decrease_value
@@ -112,15 +111,15 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         arena.timer_current = arena.timer_min_duration
                 end
                 for prop,props in pairs(newPosPlatformsList) do
-                        if props.id == tostring(items[itemList]) then
-                                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[itemList])) , 3, nil, tonumber(props.hexColor))
+                        if props.id == tostring(items[right_platform_id]) then
+                                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[right_platform_id])) , 3, nil, tonumber(props.hexColor))
                         end
                 end
 
                 show_timer = true
                 minetest.after(arena.timer_current, function()
                         for prop,props in pairs(newPosPlatformsList) do
-                                        if props.id ~= tostring(items[itemList]) then
+                                        if props.id ~= tostring(items[right_platform_id]) then
                                                 set_platform_air(props)
                                         end
                         end
