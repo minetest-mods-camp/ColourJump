@@ -21,6 +21,72 @@ local show_timer = false
 local itemList = 1
 local listValues = {}
 
+
+arena_lib.on_load("colour_jump", function(arena)
+    colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
+    arena.timer_current = arena.timer_initial_duration
+    arena.seconds_left = arena.timer_initial_duration
+
+    for prop_name, prop in pairs(arena) do
+        if string.find(prop_name, "arenaCol_") and prop.isActive == true then
+            set_platform(prop)
+        end
+    end
+
+    for pl_name,stats in pairs(arena.players) do
+        minetest.chat_send_player(pl_name, T("The minigame will start in a few seconds!"))
+        minetest.chat_send_player(pl_name, T("To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!"))
+    end
+end)
+
+
+arena_lib.on_celebration('colour_jump', function(arena, winner_name)
+    arena_lib.HUD_send_msg_all("title", arena, T('The game is over!'), 2 ,'colour_jump_win',0xAEAE00)
+    for pl_name,stats in pairs(arena.players) do
+        local player = minetest.get_player_by_name(pl_name)
+        if colour_jump.HUD[pl_name] then
+            player:hud_remove(colour_jump.HUD[pl_name].scores)
+            player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+            colour_jump.HUD[pl_name] = nil
+        end
+        minetest.after(3, function()
+            local highscore = {[1]="",[2]=0}
+            for pl_name,stats in pairs(arena.players) do
+                    if arena.rounds_counter > highscore[2] then
+                            highscore = {pl_name, arena.rounds_counter}
+                    end
+            end
+
+            local high = highscore[2]
+            local l_data = {}
+            for pl_name,stats in pairs(arena.players) do
+                    l_data[pl_name] = arena.rounds_counter
+                    if colour_jump.scores[arena.name][pl_name] then
+                            if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
+                                    colour_jump.scores[arena.name][pl_name] = high
+                            end
+                    else
+                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                    end
+            end
+            colour_jump.store_scores(colour_jump.scores)
+            for pl_name,stats in pairs(arena.players) do
+                    local player = minetest.get_player_by_name(pl_name)
+                    if player:getpos().y < arena.arena_y-4 then
+                            minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+                    end
+            end
+                    if colour_jump.HUD[pl_name] then
+                            player:hud_remove(colour_jump.HUD[pl_name].scores)
+                            player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+                            colour_jump.HUD[pl_name] = nil
+                    end
+            minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+        end, 'Done')
+    end
+end)
+
+
 arena_lib.on_time_tick("colour_jump", function(arena)
         if arena.current_time == 1 then
                 isGameOver = false
