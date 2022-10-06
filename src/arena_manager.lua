@@ -42,38 +42,41 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
             player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
             colour_jump.HUD[pl_name] = nil
         end
+
         minetest.after(3, function()
             local highscore = {[1]="",[2]=0}
             for pl_name,stats in pairs(arena.players) do
-                    if arena.rounds_counter > highscore[2] then
-                            highscore = {pl_name, arena.rounds_counter}
-                    end
+                if arena.rounds_counter > highscore[2] then
+                    highscore = {pl_name, arena.rounds_counter}
+                end
             end
 
             local high = highscore[2]
             local l_data = {}
+
             for pl_name,stats in pairs(arena.players) do
-                    l_data[pl_name] = arena.rounds_counter
-                    if colour_jump.scores[arena.name][pl_name] then
-                            if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
-                                    colour_jump.scores[arena.name][pl_name] = high
-                            end
-                    else
-                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                l_data[pl_name] = arena.rounds_counter
+                if colour_jump.scores[arena.name][pl_name] then
+                    if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
+                        colour_jump.scores[arena.name][pl_name] = high
                     end
+                else
+                    colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                end
             end
+
             colour_jump.store_scores(colour_jump.scores)
             for pl_name,stats in pairs(arena.players) do
-                    local player = minetest.get_player_by_name(pl_name)
-                    if player:getpos().y < arena.y -4 then
-                            minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
-                    end
+                local player = minetest.get_player_by_name(pl_name)
+                if player:getpos().y < arena.y -4 then
+                    minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+                end
             end
-                    if colour_jump.HUD[pl_name] then
-                            player:hud_remove(colour_jump.HUD[pl_name].scores)
-                            player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
-                            colour_jump.HUD[pl_name] = nil
-                    end
+            if colour_jump.HUD[pl_name] then
+                player:hud_remove(colour_jump.HUD[pl_name].scores)
+                player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+                colour_jump.HUD[pl_name] = nil
+            end
             minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
         end, 'Done')
     end
@@ -81,153 +84,154 @@ end)
 
 
 arena_lib.on_time_tick("colour_jump", function(arena)
-        if arena.current_time == 1 then
-                items = {}
-                colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
+    if arena.current_time == 1 then
+        items = {}
+        colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
 
-                for prop_nome,prop in pairs(arena) do
-                        if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
-                                set_platform(prop)
-                                table.insert(items, prop.id)
-                        end
-                end
+        for prop_nome,prop in pairs(arena) do
+            if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
+                set_platform(prop)
+                table.insert(items, prop.id)
+            end
         end
+    end
 
-        local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
-        local show_timer = false
+    local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
+    local show_timer = false
 
-        if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
-                arena.rounds_counter = arena.rounds_counter + 1
-                arena.seconds_left = math.floor(arena.timer_current)
-                local right_platform_id = math.random(1, arena.platforms_amount)
-                random_blocks(arena)
-                if arena.timer_current > arena.timer_min_duration then
-                        arena.timer_current = arena.timer_current - arena.timer_decrease_value
-                else
-                        arena.timer_current = arena.timer_min_duration
-                end
-                for prop,props in pairs(newPosPlatformsList) do
-                        if props.id == tostring(items[right_platform_id]) then
-                                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[right_platform_id])) , 3, nil, tonumber(props.hexColor))
-                        end
-                end
-
-                show_timer = true
-                minetest.after(arena.timer_current, function()
-                        for prop,props in pairs(newPosPlatformsList) do
-                                        if props.id ~= tostring(items[right_platform_id]) then
-                                                set_platform_air(props)
-                                        end
-                        end
-                        newPosPlatformsList = {}
-                end, 'Done')
+    if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
+        arena.rounds_counter = arena.rounds_counter + 1
+        arena.seconds_left = math.floor(arena.timer_current)
+        local right_platform_id = math.random(1, arena.platforms_amount)
+        random_blocks(arena)
+        if arena.timer_current > arena.timer_min_duration then
+            arena.timer_current = arena.timer_current - arena.timer_decrease_value
+        else
+            arena.timer_current = arena.timer_min_duration
         end
-        local countPeopleFallen = 0
-
-        if show_timer then
-            arena.seconds_left = arena.seconds_left -1
-            if arena.seconds_left > 0 then                                      -- TODO globalstep to display float values
-                print_timer(arena.players, arena.seconds_left)
+        for prop,props in pairs(newPosPlatformsList) do
+            if props.id == tostring(items[right_platform_id]) then
+                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[right_platform_id])) , 3, nil, tonumber(props.hexColor))
             end
         end
 
+        show_timer = true
+        minetest.after(arena.timer_current, function()
+            for prop,props in pairs(newPosPlatformsList) do
+                if props.id ~= tostring(items[right_platform_id]) then
+                    set_platform_air(props)
+                end
+            end
+            newPosPlatformsList = {}
+        end, 'Done')
+    end
+
+    if show_timer then
+        arena.seconds_left = arena.seconds_left -1
+        if arena.seconds_left > 0 then                                      -- TODO globalstep to display float values
+            print_timer(arena.players, arena.seconds_left)
+        end
+    end
+
+    local countPeopleFallen = 0
+
+    for pl_name in pairs(arena.players) do
+        local player = minetest.get_player_by_name(pl_name)
+        if player:getpos().y < arena.y -4 then
+                countPeopleFallen = countPeopleFallen + 1
+        end
+    end
+
+    if (countPeopleFallen == arena.players_amount) and arena.players_amount > 1 then
+        arena_lib.HUD_send_msg_all("title", arena, T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
-                if player:getpos().y < arena.y -4 then
-                        countPeopleFallen = countPeopleFallen + 1
+                if colour_jump.HUD[pl_name] then
+                        player:hud_remove(colour_jump.HUD[pl_name].scores)
+                        player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+                        colour_jump.HUD[pl_name] = nil
                 end
         end
+        arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
+    else
+        -- TODO: move HUD into a separate file
+        for pl_name in pairs(arena.players) do
+            local player = minetest.get_player_by_name(pl_name)
+            if not arena.in_celebration then
+                if not colour_jump.HUD[pl_name] then
+                    local new_hud_image = {}
+                    new_hud_image.background = player:hud_add({
+                    hud_elem_type = "image",
+                    position  = {x = 1, y = 0},
+                    offset = {x = -179, y = 32},
+                    name = "colour_jump_background",
+                    text = "HUD_colour_jump_round_counter.png",
+                    alignment = { x = 1.0},
+                    scale     = { x = 1.15, y = 1.15},
+                    z_index = 100
+                    })
+                    colour_jump.HUD_BACKGROUND[pl_name] = new_hud_image
 
-        if (countPeopleFallen == arena.players_amount) and arena.players_amount > 1 then
-                arena_lib.HUD_send_msg_all("title", arena, T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
-                for pl_name in pairs(arena.players) do
-                        local player = minetest.get_player_by_name(pl_name)
-                        if colour_jump.HUD[pl_name] then
-                                player:hud_remove(colour_jump.HUD[pl_name].scores)
-                                player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
-                                colour_jump.HUD[pl_name] = nil
-                        end
+                    local new_hud = {}
+                    new_hud.scores = player:hud_add({
+                    hud_elem_type = "text",
+                    position  = {x = 1, y = 0},
+                    offset = {x = -155, y = 42},
+                    alignment = {x = 1.0},
+                    scale = {x = 2, y = 2},
+                    name = "colour_jump_highscores",
+                    text = T('Lap: ') .. arena.rounds_counter,
+                    z_index = 100,
+                    number    = "0xFFFFFF"
+                    })
+                    colour_jump.HUD[pl_name] = new_hud
+
+                else
+                    local idText = colour_jump.HUD[pl_name].scores
+                    player:hud_change(idText, "text", stringOfRoundHUD)
+                    local idBackground = colour_jump.HUD_BACKGROUND[pl_name].background
+                    player:hud_change(idBackground, "text", "HUD_colour_jump_round_counter.png")
                 end
-                arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
-        else
-                        -- TODO: move HUD into a separate file
-                        for pl_name in pairs(arena.players) do
-                                local player = minetest.get_player_by_name(pl_name)
-                                if not arena.in_celebration then
-                                        if not colour_jump.HUD[pl_name] then
-                                                local new_hud_image = {}
-                                                new_hud_image.background = player:hud_add({
-                                                hud_elem_type = "image",
-                                                position  = {x = 1, y = 0},
-                                                offset = {x = -179, y = 32},
-                                                name = "colour_jump_background",
-                                                text = "HUD_colour_jump_round_counter.png",
-                                                alignment = { x = 1.0},
-                                                scale     = { x = 1.15, y = 1.15},
-                                                z_index = 100
-                                                })
-                                                colour_jump.HUD_BACKGROUND[pl_name] = new_hud_image
+            end
 
-                                                local new_hud = {}
-                                                new_hud.scores = player:hud_add({
-                                                hud_elem_type = "text",
-                                                position  = {x = 1, y = 0},
-                                                offset = {x = -155, y = 42},
-                                                alignment = {x = 1.0},
-                                                scale = {x = 2, y = 2},
-                                                name = "colour_jump_highscores",
-                                                text = T('Lap: ') .. arena.rounds_counter,
-                                                z_index = 100,
-                                                number    = "0xFFFFFF"
-                                                })
-                                                colour_jump.HUD[pl_name] = new_hud
-
-                                        else
-                                                local idText = colour_jump.HUD[pl_name].scores
-                                                player:hud_change(idText, "text", stringOfRoundHUD)
-                                                local idBackground = colour_jump.HUD_BACKGROUND[pl_name].background
-                                                player:hud_change(idBackground, "text", "HUD_colour_jump_round_counter.png")
-                                        end
-                                end
-
-                        if player:getpos().y < arena.y -4 then
-                                local highscore = {[1]="",[2]=0}
-                                for pl_name,stats in pairs(arena.players) do
-                                        if arena.rounds_counter > highscore[2] then
-                                                highscore = {pl_name,arena.rounds_counter}
-                                        end
-                                end
-
-                                local high = highscore[2]
-                                local l_data = {}
-                                for pl_name,stats in pairs(arena.players) do
-                                        l_data[pl_name] = arena.rounds_counter
-                                        if colour_jump.scores[arena.name][pl_name] then
-                                                if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
-                                                        colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
-                                                end
-                                        else
-                                                colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
-                                        end
-                                end
-                                colour_jump.store_scores(colour_jump.scores)
-                                for pl_name,stats in pairs(arena.players) do
-                                        local player = minetest.get_player_by_name(pl_name)
-                                        if player:getpos().y < arena.y -4 then
-                                                minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
-                                        end
-                                end
-                                        if colour_jump.HUD[pl_name] then
-                                                player:hud_remove(colour_jump.HUD[pl_name].scores)
-                                                player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
-                                                colour_jump.HUD[pl_name] = nil
-                                        end
-                                        arena_lib.remove_player_from_arena( pl_name , 1 )
-                                return
-
-                        end
+            if player:getpos().y < arena.y -4 then
+                local highscore = {[1]="",[2]=0}
+                for pl_name,stats in pairs(arena.players) do
+                    if arena.rounds_counter > highscore[2] then
+                        highscore = {pl_name,arena.rounds_counter}
+                    end
                 end
+
+                local high = highscore[2]
+                local l_data = {}
+                for pl_name,stats in pairs(arena.players) do
+                    l_data[pl_name] = arena.rounds_counter
+                    if colour_jump.scores[arena.name][pl_name] then
+                        if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
+                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                        end
+                    else
+                        colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                    end
+                end
+                colour_jump.store_scores(colour_jump.scores)
+                for pl_name,stats in pairs(arena.players) do
+                    local player = minetest.get_player_by_name(pl_name)
+                    if player:getpos().y < arena.y -4 then
+                            minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
+                    end
+                end
+                if colour_jump.HUD[pl_name] then
+                    player:hud_remove(colour_jump.HUD[pl_name].scores)
+                    player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+                    colour_jump.HUD[pl_name] = nil
+                end
+                arena_lib.remove_player_from_arena( pl_name , 1 )
+                return
+
+                end
+            end
         end
 
 end)
