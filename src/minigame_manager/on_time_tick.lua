@@ -1,69 +1,26 @@
--- * @author         MrFreeman
--- * @modifiedBy     MrFreeman
--- * @maintainedBy   MrFreeman
--- * @version        3.0
--- * @created        2022-06-25
--- * @modified       2022-09-25
+local T = minetest.get_translator("colour_jump")
 
+local function contains() end
+local function print_timer() end
+local function set_platform() end
+local function set_platform_air() end
+
+
+-- TODO: these properties should be retrieved directly from the arena, there seem
+-- not to be any reason to keep them here as local values
 local isGameOver = false
 local items = {}
 local arena_y = 0
 local numberPlatforms = 0
 local numberOfPlayers = 0
-local timerToRemovePlatforms = 0
-local timeScreen = 0
-local counterOfTimer = 0 
-local counterOfRounds = 0 
-local mode = 'singleplayer'
+local counterOfTimer = 0
 colour_jump.HUD_BACKGROUND = {}
 
--- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
-
-local function contains(table, val)
-        for i=1,#table do
-           if table[i] == val then 
-              return true
-           end
-        end
-        return false
-end
 local winner = {0,''}
-local showTimer = false
-local function printTimer(time, player, showTimer)
-        local valueCounter = math.floor(time)
-        if showTimer then
-                if valueCounter >= 0 then
-                        counterOfTimer = counterOfTimer+1
-                        valueCounter = valueCounter - (math.floor(counterOfTimer / numberOfPlayers))
-                        if valueCounter > 0 and counterOfRounds ~= 0 then
-                                arena_lib.HUD_send_msg("hotbar", player, colour_jump.T('The platforms disappear in: ') .. tostring(valueCounter) .. colour_jump.T(' SECS!'), 1 ,nil,0xFFFFFF)
-                        end       
-                end
-        end
-end
-
-local function set_platform(colour)
-        local poss = {}
-        for i = -1,1 do
-           for k = -1,1 do
-               table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
-          end
-        end
-        minetest.bulk_set_node(poss, {name=colour.name})
-     end
-
-local function set_platform_air(colour)
-local poss = {}
-for i = -1,1 do
-        for k = -1,1 do
-        table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
-        end
-end
-minetest.bulk_set_node(poss, {name="air"})
-end
+local show_timer = false
 
 local itemList = 1
-local listValues = {} 
+local listValues = {}
 
 arena_lib.on_time_tick("colour_jump", function(arena)
         if arena.current_time == 1 then
@@ -72,13 +29,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 arena_y = arena.arena_y
                 numberPlatforms = 0
                 numberOfPlayers = 0
-                timerToRemovePlatforms = arena.timerToRemovePlatforms
-                timeScreen = arena.timerToRemovePlatforms
-                counterOfTimer = 0 
-                counterOfRounds = 0 
-                arena.counterOfRounds = 0
-                arena.multi_scores = {}
-                mode = 'singleplayer'
+                counterOfTimer = 0
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
 
@@ -89,23 +40,16 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 numberPlatforms = numberPlatforms + 1
                         end
                 end
-        
+
                 for pl_name,stats in pairs(arena.players) do
                         numberOfPlayers = numberOfPlayers + 1
                 end
-        
-                if numberOfPlayers > 1 then
-                        mode = 'multiplayer'
-                end
-
         end
+
         if arena.players_amount == 1 and numberOfPlayers ~= 1 then
                 isGameOver = true
         end
-        local scores = arena.multi_scores   
-        local decreaserTimerPlatforms = arena.timerToDecreaseTimeOfPlatforms
-        local score = counterOfRounds
-        local stringOfRoundHUD = colour_jump.T('Lap: ').. score .. "\n"
+        local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
         local function randomBlocks()
                 for prop_nome,prop in pairs(arena) do
                         if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
@@ -115,17 +59,17 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         end
                 end
 
-                takenNumbers = {}    
-                newPosPlatformsList = {}    
+                takenNumbers = {}
+                newPosPlatformsList = {}
                 checker = math.random(1, numberPlatforms)
                 for i=1,numberPlatforms do
                         while (contains(takenNumbers, checker)) do
                                 checker = math.random(1, numberPlatforms)
                                 if not contains(takenNumbers, checker) then break end
                         end
-        
+
                         if  (not contains(takenNumbers, checker)) then
-                                newPosPlatform = {}   
+                                newPosPlatform = {}
                                 newPosPlatform.x = listValues[i].x
                                 newPosPlatform.y = arena_y
                                 newPosPlatform.z = listValues[i].z
@@ -133,7 +77,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 newPosPlatform.name = listValues[checker].name
                                 newPosPlatform.isActive = listValues[checker].isActive
                                 newPosPlatform.hexColor = listValues[checker].hexColor
-                                set_platform(newPosPlatform)                   
+                                set_platform(newPosPlatform)
                         end
                         table.insert(takenNumbers, checker)
                         table.insert(newPosPlatformsList, newPosPlatform)
@@ -149,28 +93,26 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 for i=1, #takenNumbers do
                         takenNumbers[i] = nil
                 end
-end
+            end
         if ((arena.current_time % 10) == 0 and isGameOver ~= true) then
                 counterOfTimer = 0
-                counterOfRounds = counterOfRounds + 1
-                arena.counterOfRounds = counterOfRounds
-                valueCounter = math.floor(timerToRemovePlatforms)
+                arena.rounds_counter = arena.rounds_counter + 1
+                valueCounter = math.floor(arena.timer_current)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
-                if timerToRemovePlatforms > arena.minValueOfTimer then
-                        timerToRemovePlatforms = timerToRemovePlatforms - decreaserTimerPlatforms
+                if arena.timer_current > arena.timer_min_duration then
+                        arena.timer_current = arena.timer_current - arena.timer_decrease_value
                 else
-                        timerToRemovePlatforms = arena.minValueOfTimer
+                        arena.timer_current = arena.timer_min_duration
                 end
-                timeScreen = timerToRemovePlatforms
                 for prop,props in pairs(newPosPlatformsList) do
                         if props.id == tostring(items[itemList]) then
-                                arena_lib.HUD_send_msg_all("title", arena, tostring(colour_jump.T(items[itemList])) , 3, nil, tonumber(props.hexColor))
+                                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[itemList])) , 3, nil, tonumber(props.hexColor))
                         end
                 end
-                
-                showTimer = true
-                minetest.after(timerToRemovePlatforms, function() 
+
+                show_timer = true
+                minetest.after(arena.timer_current, function()
                         for prop,props in pairs(newPosPlatformsList) do
                                         if props.id ~= tostring(items[itemList]) then
                                                 set_platform_air(props)
@@ -181,9 +123,17 @@ end
         end
         local countPeopleFallen = 0
 
+        if show_timer then
+            local time = math.floor(arena.timer_current)
+            counterOfTimer = counterOfTimer + 1
+            time = time - (math.floor(counterOfTimer / numberOfPlayers))
+            if time > 0 and arena.rounds_counter ~= 0 then
+                print_timer(arena.players, time)
+            end
+        end
+
         for pl_name in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
-                printTimer(timeScreen, pl_name, showTimer)
                 if player:getpos().y < arena_y-4 then
                         countPeopleFallen = countPeopleFallen + 1
                 end
@@ -191,7 +141,7 @@ end
 
         if (countPeopleFallen == numberOfPlayers) and numberOfPlayers ~= 1 then
                 isGameOver = true
-                arena_lib.HUD_send_msg_all("title", arena, colour_jump.T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
+                arena_lib.HUD_send_msg_all("title", arena, T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
                 for pl_name in pairs(arena.players) do
                         local player = minetest.get_player_by_name(pl_name)
                         if colour_jump.HUD[pl_name] then
@@ -202,21 +152,21 @@ end
                 end
                         arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
         else
-                              
+                        -- TODO: move HUD into a separate file
                         for pl_name in pairs(arena.players) do
                                 local player = minetest.get_player_by_name(pl_name)
-                                if isGameOver ~= true then 
+                                if isGameOver ~= true then
                                         if not colour_jump.HUD[pl_name] then
                                                 local new_hud_image = {}
                                                 new_hud_image.background = player:hud_add({
                                                 hud_elem_type = "image",
                                                 position  = {x = 1, y = 0},
-                                                offset = {x = -179, y = 32},                                            
+                                                offset = {x = -179, y = 32},
                                                 name = "colour_jump_background",
                                                 text = "HUD_colour_jump_round_counter.png",
                                                 alignment = { x = 1.0},
                                                 scale     = { x = 1.15, y = 1.15},
-                                                z_index = 100                                            
+                                                z_index = 100
                                                 })
                                                 colour_jump.HUD_BACKGROUND[pl_name] = new_hud_image
 
@@ -224,11 +174,11 @@ end
                                                 new_hud.scores = player:hud_add({
                                                 hud_elem_type = "text",
                                                 position  = {x = 1, y = 0},
-                                                offset = {x = -155, y = 42},                                          
+                                                offset = {x = -155, y = 42},
                                                 alignment = {x = 1.0},
-                                                scale = {x = 2, y = 2},                                            
+                                                scale = {x = 2, y = 2},
                                                 name = "colour_jump_highscores",
-                                                text = colour_jump.T('Lap: ') .. counterOfRounds,
+                                                text = T('Lap: ') .. arena.rounds_counter,
                                                 z_index = 100,
                                                 number    = "0xFFFFFF"
                                                 })
@@ -241,25 +191,25 @@ end
                                                 player:hud_change(idBackground, "text", "HUD_colour_jump_round_counter.png")
                                         end
                                 end
-                       
+
                         if player:getpos().y < arena_y-4 then
                                 local highscore = {[1]="",[2]=0}
                                 for pl_name,stats in pairs(arena.players) do
-                                        if counterOfRounds > highscore[2] then
-                                                highscore = {pl_name,counterOfRounds}
+                                        if arena.rounds_counter > highscore[2] then
+                                                highscore = {pl_name,arena.rounds_counter}
                                         end
                                 end
 
                                 local high = highscore[2]
                                 local l_data = {}
                                 for pl_name,stats in pairs(arena.players) do
-                                        l_data[pl_name]=counterOfRounds
+                                        l_data[pl_name] = arena.rounds_counter
                                         if colour_jump.scores[arena.name][pl_name] then
-                                                if counterOfRounds > colour_jump.scores[arena.name][pl_name] then
-                                                        colour_jump.scores[arena.name][pl_name] = counterOfRounds
+                                                if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
+                                                        colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
                                                 end
                                         else
-                                                colour_jump.scores[arena.name][pl_name] = counterOfRounds
+                                                colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
                                         end
                                 end
                                 colour_jump.store_scores(colour_jump.scores)
@@ -282,3 +232,43 @@ end
         end
 
 end)
+
+
+
+--- LOCAL FUNCTIONS
+
+-- function created to check if a value is inside a list. Used inside the function above for the random switch positions ( fn randomBlocks() )
+function contains(table, val)
+    for i=1,#table do
+       if table[i] == val then
+          return true
+       end
+    end
+    return false
+end
+
+function print_timer(pl_names, time)
+    for pl_name, _ in pairs(pl_names) do
+      arena_lib.HUD_send_msg("hotbar", pl_name, T('The platforms disappear in: ') .. time .. T(' SECS!'), 1 ,nil,0xFFFFFF)
+    end
+end
+
+function set_platform(colour)
+    local poss = {}
+    for i = -1,1 do
+        for k = -1,1 do
+            table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
+        end
+    end
+    minetest.bulk_set_node(poss, {name=colour.name})
+end
+
+function set_platform_air(colour)
+    local poss = {}
+    for i = -1,1 do
+        for k = -1,1 do
+            table.insert(poss, vector.new(colour.x-i,arena_y,colour.z-k))
+        end
+    end
+    minetest.bulk_set_node(poss, {name="air"})
+end

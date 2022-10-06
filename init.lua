@@ -1,15 +1,6 @@
--- * @author         MrFreeman
--- * @modifiedBy     MrFreeman
--- * @maintainedBy   MrFreeman
--- * @version        3.0
--- * @created        2022-06-25
--- * @modified       2022-09-23
-
 local modname = "colour_jump"
 colour_jump = {}
-multi_scores = {}
 colour_jump.HUD = {}
-colour_jump.T = minetest.get_translator("colour_jump")
 arena_lib.register_minigame( modname , {
 
         properties = {
@@ -23,10 +14,11 @@ arena_lib.register_minigame( modname , {
                 arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black", isActive=true, hexColor="0x000000"},
                 arenaCol_White = {x = -3, z = 79, name="wool:white", id="White", isActive=true, hexColor="0xFFFFFF"},
                 arena_y = 30,
-                timerToRemovePlatforms = 7.1,
-                timerToDecreaseTimeOfPlatforms = 0.1,
-                counterOfRounds = 0,
-                minValueOfTimer = 1.5,
+                timer_initial_duration = 7.1,
+                timer_min_duration = 1.5,
+                timer_decrease_value = 0.1,
+                timer_current = 0,
+                rounds_counter = 0,
             },
 
         prefix = "["..modname.."] ",
@@ -43,15 +35,17 @@ arena_lib.register_minigame( modname , {
 --====================================================
 
 
-local path = minetest.get_modpath(modname)
-
+local srcpath = minetest.get_modpath(modname) .. "/src/"
 
 if not minetest.get_modpath("lib_chatcmdbuilder") then
-        dofile(path .. "/src/libraries/chatcmdbuilder.lua")
+        dofile(srcpath .. "libraries/chatcmdbuilder.lua")
 end
 
+dofile(srcpath .. "commands.lua")
+dofile(srcpath .. "privs.lua")
+
 -- this callback runs when the game starts and it has been loaded
-local manager_path = path .. "/src/minigame_manager/"
+local manager_path = srcpath .. "/minigame_manager/"
 dofile(manager_path .. "on_load.lua")
 
 -- this callback runs when a winner is decided
@@ -60,71 +54,3 @@ dofile(manager_path .. "on_celebration.lua")
 -- this callback runs about every second while the game is running (if time_mode == "incremental" or "decremental")
 dofile(manager_path .. "on_time_tick.lua")
 dofile(manager_path .. "leaderboard.lua")
-
---====================================================
---====================================================
---                   Chatcommands
---====================================================
---====================================================
-
---needed for creating, enabling, and editing arenas
-
-minetest.register_privilege( modname .."_admin", "Create and edit ".. modname .. " arenas")
-
-
-local required_privs = {}
-
-required_privs[modname .."_admin" ] = true
-
-
-ChatCmdBuilder.new(modname, function(cmd)
-        -- create arena
-        cmd:sub("create :arena", function(name, arena_name)
-            arena_lib.create_arena(name, modname, arena_name)
-        end)
-      
-        cmd:sub("create :arena :minplayers:int :maxplayers:int", function(name, arena_name, min_players, max_players)
-            arena_lib.create_arena(name, modname, arena_name, min_players, max_players)
-        end)
-      
-        -- remove arena
-        cmd:sub("remove :arena", function(name, arena_name)
-            arena_lib.remove_arena(name, modname, arena_name)
-        end)
-      
-        -- list of the arenas
-        cmd:sub("list", function(name)
-            arena_lib.print_arenas(name, modname)
-        end)
-      
-        -- enter editor mode
-        cmd:sub("edit :arena", function(sender, arena)
-            arena_lib.enter_editor(sender, modname, arena)
-        end)
-      
-        -- enable and disable arenas
-        cmd:sub("enable :arena", function(name, arena)
-            arena_lib.enable_arena(name, modname, arena)
-        end)
-      
-        cmd:sub("disable :arena", function(name, arena)
-            arena_lib.disable_arena(name, modname, arena)
-        end)
-      
-      end, {
-        description = [[
-      
-          (/help ]] .. modname .. [[)
-      
-          Use this to configure your arena:
-          - create <arena name> [min players] [max players]
-          - edit <arena name>
-          - enable <arena name>
-      
-          Other commands:
-          - remove <arena name>
-          - disable <arena>
-          - list (lists are created arenas)
-          ]],
-          privs = required_privs,
-      })
