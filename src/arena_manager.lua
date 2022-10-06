@@ -8,14 +8,12 @@ local function set_platform_air() end
 
 -- TODO: these properties should be retrieved directly from the arena, there seem
 -- not to be any reason to keep them here as local values
-local isGameOver = false
 local items = {}
 local arena_y = 0
 local numberPlatforms = 0
 local numberOfPlayers = 0
 colour_jump.HUD_BACKGROUND = {}
 
-local winner = {0,''}
 local show_timer = false
 
 local itemList = 1
@@ -89,7 +87,6 @@ end)
 
 arena_lib.on_time_tick("colour_jump", function(arena)
         if arena.current_time == 1 then
-                isGameOver = false
                 items = {}
                 arena_y = arena.arena_y
                 numberPlatforms = 0
@@ -110,9 +107,12 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 end
         end
 
-        if arena.players_amount == 1 and numberOfPlayers ~= 1 then
-                isGameOver = true
+        if arena.players_amount == 1 and numberOfPlayers ~= 1 then              -- TODO understand this numberOfPlayers variable
+          for pl_name, _ in pairs(arena.players) do
+              arena_lib.load_celebration("colour_jump", arena, pl_name)
+          end
         end
+
         local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
         local function randomBlocks()
                 for prop_nome,prop in pairs(arena) do
@@ -158,7 +158,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         takenNumbers[i] = nil
                 end
             end
-        if ((arena.current_time % 10) == 0 and isGameOver ~= true) then
+        if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
                 arena.rounds_counter = arena.rounds_counter + 1
                 arena.seconds_left = math.floor(arena.timer_current)
                 itemList =  math.random(1, numberPlatforms)
@@ -201,7 +201,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         end
 
         if (countPeopleFallen == numberOfPlayers) and numberOfPlayers ~= 1 then
-                isGameOver = true
                 arena_lib.HUD_send_msg_all("title", arena, T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
                 for pl_name in pairs(arena.players) do
                         local player = minetest.get_player_by_name(pl_name)
@@ -216,7 +215,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         -- TODO: move HUD into a separate file
                         for pl_name in pairs(arena.players) do
                                 local player = minetest.get_player_by_name(pl_name)
-                                if isGameOver ~= true then
+                                if not arena.in_celebration then
                                         if not colour_jump.HUD[pl_name] then
                                                 local new_hud_image = {}
                                                 new_hud_image.background = player:hud_add({
