@@ -11,7 +11,6 @@ local function random_blocks() end
 -- not to be any reason to keep them here as local values. This will also create
 -- issues when two or more arenas are in progress at the same time
 local items = {}
-local show_timer = false
 local listValues = {}
 
 
@@ -96,6 +95,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         end
 
         local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
+        local show_timer = false
 
         if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
                 arena.rounds_counter = arena.rounds_counter + 1
