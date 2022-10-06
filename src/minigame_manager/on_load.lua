@@ -5,11 +5,9 @@ arena_lib.on_load("colour_jump", function(arena)
         local items = {}
         local arena_y = arena.arena_y
         local numberPlatforms = 0
-        local numberOfPlayers = 0
-        local counterOfTimer = 0
-        local mode = 'singleplayer'
         colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
         arena.timer_current = arena.timer_initial_duration
+        arena.seconds_left = arena.timer_initial_duration
 
        local  function set_platform(colour)
                 local poss = {}
@@ -42,10 +40,5 @@ arena_lib.on_load("colour_jump", function(arena)
         for pl_name,stats in pairs(arena.players) do
                 minetest.chat_send_player(pl_name, T("The minigame will start in a few seconds!"))
                 minetest.chat_send_player(pl_name, T("To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!"))
-                numberOfPlayers = numberOfPlayers + 1
-        end
-
-        if numberOfPlayers > 1 then
-                mode = 'multiplayer'
         end
 end)

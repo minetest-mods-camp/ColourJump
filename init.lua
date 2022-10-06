@@ -18,6 +18,7 @@ arena_lib.register_minigame( modname , {
                 timer_min_duration = 1.5,
                 timer_decrease_value = 0.1,
                 timer_current = 0,
+                seconds_left = 0,
                 rounds_counter = 0,
             },
 

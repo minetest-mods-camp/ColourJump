@@ -13,7 +13,6 @@ local items = {}
 local arena_y = 0
 local numberPlatforms = 0
 local numberOfPlayers = 0
-local counterOfTimer = 0
 colour_jump.HUD_BACKGROUND = {}
 
 local winner = {0,''}
@@ -29,7 +28,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 arena_y = arena.arena_y
                 numberPlatforms = 0
                 numberOfPlayers = 0
-                counterOfTimer = 0
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
 
@@ -95,9 +93,8 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 end
             end
         if ((arena.current_time % 10) == 0 and isGameOver ~= true) then
-                counterOfTimer = 0
                 arena.rounds_counter = arena.rounds_counter + 1
-                valueCounter = math.floor(arena.timer_current)
+                arena.seconds_left = math.floor(arena.timer_current)
                 itemList =  math.random(1, numberPlatforms)
                 randomBlocks()
                 if arena.timer_current > arena.timer_min_duration then
@@ -124,11 +121,9 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         local countPeopleFallen = 0
 
         if show_timer then
-            local time = math.floor(arena.timer_current)
-            counterOfTimer = counterOfTimer + 1
-            time = time - (math.floor(counterOfTimer / numberOfPlayers))
-            if time > 0 and arena.rounds_counter ~= 0 then
-                print_timer(arena.players, time)
+            arena.seconds_left = arena.seconds_left -1
+            if arena.seconds_left > 0 then                                      -- TODO globalstep to display float values
+                print_timer(arena.players, arena.seconds_left)
             end
         end
 
