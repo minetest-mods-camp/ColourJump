@@ -11,7 +11,6 @@ local function random_blocks() end
 -- not to be any reason to keep them here as local values. This will also create
 -- issues when two or more arenas are in progress at the same time
 local items = {}
-local numberPlatforms = 0
 local show_timer = false
 local listValues = {}
 
@@ -85,7 +84,6 @@ end)
 arena_lib.on_time_tick("colour_jump", function(arena)
         if arena.current_time == 1 then
                 items = {}
-                numberPlatforms = 0
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
 
@@ -93,7 +91,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                         if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
                                 set_platform(prop)
                                 table.insert(items, prop.id)
-                                numberPlatforms = numberPlatforms + 1
                         end
                 end
         end
@@ -103,7 +100,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
         if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
                 arena.rounds_counter = arena.rounds_counter + 1
                 arena.seconds_left = math.floor(arena.timer_current)
-                local right_platform_id = math.random(1, numberPlatforms)
+                local right_platform_id = math.random(1, arena.platforms_amount)
                 random_blocks(arena)
                 if arena.timer_current > arena.timer_min_duration then
                         arena.timer_current = arena.timer_current - arena.timer_decrease_value
@@ -284,12 +281,14 @@ function random_blocks(arena)
         end
     end
 
+    local platforms_amount = arena.platforms_amount
+
     takenNumbers = {}
     newPosPlatformsList = {}
-    checker = math.random(1, numberPlatforms)
-    for i=1,numberPlatforms do
+    checker = math.random(1, platforms_amount)
+    for i=1, platforms_amount do
         while (contains(takenNumbers, checker)) do
-            checker = math.random(1, numberPlatforms)
+            checker = math.random(1, platforms_amount)
             if not contains(takenNumbers, checker) then break end
         end
 

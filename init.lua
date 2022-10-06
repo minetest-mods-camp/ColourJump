@@ -14,6 +14,7 @@ arena_lib.register_minigame( modname , {
                 arenaCol_Black = {x = 1, z = 79, name="wool:black", id="Black", isActive=true, hexColor="0x000000"},
                 arenaCol_White = {x = -3, z = 79, name="wool:white", id="White", isActive=true, hexColor="0xFFFFFF"},
                 y = 30,
+                platforms_amount = 9,
                 timer_initial_duration = 7.1,
                 timer_min_duration = 1.5,
                 timer_decrease_value = 0.1,
