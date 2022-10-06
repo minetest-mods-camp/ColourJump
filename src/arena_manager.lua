@@ -13,7 +13,6 @@ local function random_blocks() end
 local items = {}
 local arena_y = 0
 local numberPlatforms = 0
-local numberOfPlayers = 0
 local show_timer = false
 local itemList = 1
 local listValues = {}
@@ -90,7 +89,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 items = {}
                 arena_y = arena.arena_y
                 numberPlatforms = 0
-                numberOfPlayers = 0
                 colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
 
 
@@ -101,16 +99,6 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 numberPlatforms = numberPlatforms + 1
                         end
                 end
-
-                for pl_name,stats in pairs(arena.players) do
-                        numberOfPlayers = numberOfPlayers + 1
-                end
-        end
-
-        if arena.players_amount == 1 and numberOfPlayers ~= 1 then              -- TODO understand this numberOfPlayers variable
-          for pl_name, _ in pairs(arena.players) do
-              arena_lib.load_celebration("colour_jump", arena, pl_name)
-          end
         end
 
         local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
@@ -157,7 +145,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 end
         end
 
-        if (countPeopleFallen == numberOfPlayers) and numberOfPlayers ~= 1 then
+        if (countPeopleFallen == arena.players_amount) and arena.players_amount > 1 then
                 arena_lib.HUD_send_msg_all("title", arena, T('All the players fallen down! Nobody won'), 3, nil, "0xB6D53C")
                 for pl_name in pairs(arena.players) do
                         local player = minetest.get_player_by_name(pl_name)
@@ -167,7 +155,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                                 colour_jump.HUD[pl_name] = nil
                         end
                 end
-                        arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
+                arena_lib.force_arena_ending('colour_jump', arena, 'ColourJump')
         else
                         -- TODO: move HUD into a separate file
                         for pl_name in pairs(arena.players) do
