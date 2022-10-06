@@ -21,7 +21,10 @@ arena_lib.register_minigame( modname , {
                 timer_current = 0,
                 seconds_left = 0,
                 rounds_counter = 0,
-                show_timer = false, -- TODO: remove from here with a better implementation
+                -- TODO: remove the properties below from here with a better implementation
+                show_timer = false,
+                items = {},
+                list_values = {}
             },
 
         prefix = "["..modname.."] ",

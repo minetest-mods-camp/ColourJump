@@ -7,13 +7,6 @@ local function set_platform_air() end
 local function random_blocks() end
 
 
--- TODO: these properties should be retrieved directly from the arena, there seem
--- not to be any reason to keep them here as local values. This will also create
--- issues when two or more arenas are in progress at the same time
-local items = {}
-local listValues = {}
-
-
 arena_lib.on_load("colour_jump", function(arena)
     colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
     arena.timer_current = arena.timer_initial_duration
@@ -23,6 +16,7 @@ arena_lib.on_load("colour_jump", function(arena)
         if string.find(prop_name, "arenaCol_") and prop.isActive == true then
             prop.y = arena.y
             set_platform(prop)
+            table.insert(arena.items, prop.id)
         end
     end
 
@@ -84,18 +78,6 @@ end)
 
 
 arena_lib.on_time_tick("colour_jump", function(arena)
-    if arena.current_time == 1 then
-        items = {}
-        colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
-
-
-        for prop_nome,prop in pairs(arena) do
-            if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
-                set_platform(prop)
-                table.insert(items, prop.id)
-            end
-        end
-    end
 
     local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
 
@@ -110,15 +92,15 @@ arena_lib.on_time_tick("colour_jump", function(arena)
             arena.timer_current = arena.timer_min_duration
         end
         for prop,props in pairs(newPosPlatformsList) do
-            if props.id == tostring(items[right_platform_id]) then
-                arena_lib.HUD_send_msg_all("title", arena, tostring(T(items[right_platform_id])) , 3, nil, tonumber(props.hexColor))
+            if props.id == tostring(arena.items[right_platform_id]) then
+                arena_lib.HUD_send_msg_all("title", arena, tostring(T(arena.items[right_platform_id])) , 3, nil, tonumber(props.hexColor))
             end
         end
 
         arena.show_timer = true
         minetest.after(arena.timer_current, function()
             for prop,props in pairs(newPosPlatformsList) do
-                if props.id ~= tostring(items[right_platform_id]) then
+                if props.id ~= tostring(arena.items[right_platform_id]) then
                     set_platform_air(props)
                 end
             end
@@ -276,11 +258,14 @@ function set_platform_air(colour)
 end
 
 function random_blocks(arena)
+
+  local list_values = arena.list_values
+
     for prop_nome,prop in pairs(arena) do
         if string.find(prop_nome, "arenaCol_") and prop.isActive == true then
             local values = {}
             values = {x = tonumber(prop.x), y = tonumber(arena.y), z = tonumber(prop.z), id = tostring(prop.id), name = tostring(prop.name), hexColor = tostring(prop.hexColor)}
-            table.insert(listValues, values)
+            table.insert(list_values, values)
         end
     end
 
@@ -297,13 +282,13 @@ function random_blocks(arena)
 
         if  (not contains(takenNumbers, checker)) then
             newPosPlatform = {}
-            newPosPlatform.x = listValues[i].x
+            newPosPlatform.x = list_values[i].x
             newPosPlatform.y = arena.y
-            newPosPlatform.z = listValues[i].z
-            newPosPlatform.id = listValues[checker].id
-            newPosPlatform.name = listValues[checker].name
-            newPosPlatform.isActive = listValues[checker].isActive
-            newPosPlatform.hexColor = listValues[checker].hexColor
+            newPosPlatform.z = list_values[i].z
+            newPosPlatform.id = list_values[checker].id
+            newPosPlatform.name = list_values[checker].name
+            newPosPlatform.isActive = list_values[checker].isActive
+            newPosPlatform.hexColor = list_values[checker].hexColor
             set_platform(newPosPlatform)
         end
         table.insert(takenNumbers, checker)
