@@ -111,7 +111,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
     if arena.show_timer then
         arena.seconds_left = arena.seconds_left -1
         if arena.seconds_left > 0 then                                      -- TODO globalstep to display float values
-            print_timer(arena.players, arena.seconds_left)
+            print_timer(arena.players, arena.seconds_left, arena.rounds_counter_temp)
         end
     end
 
@@ -231,9 +231,11 @@ function contains(table, val)
     return false
 end
 
-function print_timer(pl_names, time)
+function print_timer(pl_names, time, round)
     for pl_name, _ in pairs(pl_names) do
-      arena_lib.HUD_send_msg("hotbar", pl_name, T('The platforms disappear in: ') .. time .. T(' SECS!'), 1 ,nil,0xFFFFFF)
+        if round ~= 0 then
+            arena_lib.HUD_send_msg("hotbar", pl_name, T('The platforms disappear in: ') .. time .. T(' SECS!'), 1 ,nil,0xFFFFFF)
+        end
     end
 end
 
