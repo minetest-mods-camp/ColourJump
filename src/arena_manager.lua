@@ -40,8 +40,8 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
         minetest.after(3, function()
             local highscore = {[1]="",[2]=0}
             for pl_name,stats in pairs(arena.players) do
-                if arena.rounds_counter > highscore[2] then
-                    highscore = {pl_name, arena.rounds_counter}
+                if arena.rounds_counter_temp > highscore[2] then
+                    highscore = {pl_name, arena.rounds_counter_temp}
                 end
             end
 
@@ -49,13 +49,13 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
             local l_data = {}
 
             for pl_name,stats in pairs(arena.players) do
-                l_data[pl_name] = arena.rounds_counter
+                l_data[pl_name] = arena.rounds_counter_temp
                 if colour_jump.scores[arena.name][pl_name] then
-                    if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
+                    if arena.rounds_counter_temp > colour_jump.scores[arena.name][pl_name] then
                         colour_jump.scores[arena.name][pl_name] = high
                     end
                 else
-                    colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                    colour_jump.scores[arena.name][pl_name] = arena.rounds_counter_temp
                 end
             end
 
@@ -79,10 +79,10 @@ end)
 
 arena_lib.on_time_tick("colour_jump", function(arena)
 
-    local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter .. "\n"
+    local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter_temp .. "\n"
 
     if ((arena.current_time % 10) == 0 and not arena.in_celebration) then
-        arena.rounds_counter = arena.rounds_counter + 1
+        arena.rounds_counter_temp = arena.rounds_counter_temp + 1
         arena.seconds_left = math.floor(arena.timer_current)
         local right_platform_id = math.random(1, arena.platforms_amount)
         random_blocks(arena)
@@ -162,7 +162,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                     alignment = {x = 1.0},
                     scale = {x = 2, y = 2},
                     name = "colour_jump_highscores",
-                    text = T('Lap: ') .. arena.rounds_counter,
+                    text = T('Lap: ') .. arena.rounds_counter_temp,
                     z_index = 100,
                     number    = "0xFFFFFF"
                     })
@@ -179,21 +179,21 @@ arena_lib.on_time_tick("colour_jump", function(arena)
             if player:getpos().y < arena.y -4 then
                 local highscore = {[1]="",[2]=0}
                 for pl_name,stats in pairs(arena.players) do
-                    if arena.rounds_counter > highscore[2] then
-                        highscore = {pl_name,arena.rounds_counter}
+                    if arena.rounds_counter_temp > highscore[2] then
+                        highscore = {pl_name,arena.rounds_counter_temp}
                     end
                 end
 
                 local high = highscore[2]
                 local l_data = {}
                 for pl_name,stats in pairs(arena.players) do
-                    l_data[pl_name] = arena.rounds_counter
+                    l_data[pl_name] = arena.rounds_counter_temp
                     if colour_jump.scores[arena.name][pl_name] then
-                        if arena.rounds_counter > colour_jump.scores[arena.name][pl_name] then
-                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                        if arena.rounds_counter_temp > colour_jump.scores[arena.name][pl_name] then
+                            colour_jump.scores[arena.name][pl_name] = arena.rounds_counter_temp
                         end
                     else
-                        colour_jump.scores[arena.name][pl_name] = arena.rounds_counter
+                        colour_jump.scores[arena.name][pl_name] = arena.rounds_counter_temp
                     end
                 end
                 colour_jump.store_scores(colour_jump.scores)

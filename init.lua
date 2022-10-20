@@ -27,6 +27,10 @@ arena_lib.register_minigame( modname , {
                 list_values = {}
             },
 
+            temp_properties = {
+                rounds_counter_temp = 0
+            },
+
         prefix = "["..modname.."] ",
         time_mode = 'incremental',
         name = "Colour Jump",
