@@ -6,6 +6,11 @@ local function set_platform() end
 local function set_platform_air() end
 local function random_blocks() end
 
+local takenNumbers = {}
+local newPosPlatformsList = {}
+local checker = 0
+local newPosPlatform = {}
+
 
 arena_lib.on_load("colour_jump", function(arena)
     colour_jump.scores[arena.name] = colour_jump.scores[arena.name] or {}
