@@ -35,6 +35,7 @@ arena_lib.register_minigame( modname , {
         time_mode = 'incremental',
         name = "Colour Jump",
         icon = "colour_jump_icon.png",
+        celebration_time = 5,
         disabled_damage_types = {"fall","punch","set_hp"},
 })
 
