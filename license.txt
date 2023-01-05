@@ -3,10 +3,6 @@
 
 textures colour_jump_icon.png, which is by Zughy and is CC by SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
 
-The music background is "Another beek beep beer please" by Rolemusic and it's under CreativeCommons License CC by 3.0 https://creativecommons.org/licenses/by/3.0/
-
-Source: https://freemusicarchive.org/music/Rolemusic/gigs_n_contest/rolemusic_-_gigs_n_contest_-_03_Another_beek_beep_beer_please
-
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
