@@ -67,7 +67,7 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
             colour_jump.store_scores(colour_jump.scores)
             for pl_name,stats in pairs(arena.players) do
                 local player = minetest.get_player_by_name(pl_name)
-                if player:getpos().y < arena.y -4 then
+                if player:get_pos().y < arena.y -4 then
                     minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
                 end
             end
@@ -124,7 +124,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
 
     for pl_name in pairs(arena.players) do
         local player = minetest.get_player_by_name(pl_name)
-        if player:getpos().y < arena.y -4 then
+        if player:get_pos().y < arena.y -4 then
                 countPeopleFallen = countPeopleFallen + 1
         end
     end
@@ -181,7 +181,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 end
             end
 
-            if player:getpos().y < arena.y -4 then
+            if player:get_pos().y < arena.y -4 then
                 local highscore = {[1]="",[2]=0}
                 for pl_name,stats in pairs(arena.players) do
                     if arena.rounds_counter_temp > highscore[2] then
@@ -204,7 +204,7 @@ arena_lib.on_time_tick("colour_jump", function(arena)
                 colour_jump.store_scores(colour_jump.scores)
                 for pl_name,stats in pairs(arena.players) do
                     local player = minetest.get_player_by_name(pl_name)
-                    if player:getpos().y < arena.y -4 then
+                    if player:get_pos().y < arena.y -4 then
                             minetest.show_formspec(pl_name, "cj_scores_mp", colour_jump.get_leader_form_endgame(arena.name,l_data))
                     end
                 end
