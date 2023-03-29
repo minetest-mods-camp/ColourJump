@@ -26,7 +26,7 @@ arena_lib.register_minigame( modname , {
                 items = {},
                 list_values = {}
             },
-
+            min_players = 2,
             temp_properties = {
                 rounds_counter_temp = 0
             },
