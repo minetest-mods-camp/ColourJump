@@ -82,6 +82,15 @@ arena_lib.on_celebration('colour_jump', function(arena, winner_name)
 end)
 
 
+arena_lib.on_quit('colour_jump', function(arena, pl_name, is_forced)
+    local player = minetest.get_player_by_name(pl_name)
+    if colour_jump.HUD[pl_name] then
+        player:hud_remove(colour_jump.HUD[pl_name].scores)
+        player:hud_remove(colour_jump.HUD_BACKGROUND[pl_name].background)
+        colour_jump.HUD[pl_name] = nil
+    end
+end)
+
 arena_lib.on_time_tick("colour_jump", function(arena)
 
     local stringOfRoundHUD = T('Lap: ').. arena.rounds_counter_temp .. "\n"
