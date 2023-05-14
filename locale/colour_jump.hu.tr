@@ -1,0 +1,34 @@
+# version 2.0
+# author(s): nyomi
+# textdomain: colour_jump
+# @n means "newline", while @1, @2 ecc. are in-game parameters 
+
+# In-game messages
+
+The minigame will start in a few seconds!=A minigame pár másodperc múlva indul 
+To win, you have to be the last one standing! Reach the correct platform when it will be show on your screen...GOOD LUCK!=A győzelemhez az utolsónak kell állnia! Érje el a megfelelő platformot, amikor megjelenik a képernyőn... SOK SZERENCSÉT!
+Congrats! You won the game!!=Gratulálok te nyerted a játékot!!
+The platforms disappear in: =A platformok eltünnek: 
+ SECS!= SEK.!
+Red=Piros
+Blue=Kék
+Yellow=Sárga
+Orange=Narancs
+Brown=Barna
+Pink=Rozsaszin
+Green=Zöld
+Black=Fekete
+White=Fehér
+Sky Blue=Égszinkék
+Grey=Szürke
+All the players fallen down! Nobody won=Az összes játékos leesett! Senki se nyert
+Lap: =lap: 
+The game is over!=A játék végyet ért!
+
+# Commands messages
+You cannot quit!=Nem léphetsz ki!
+[!] No data for that arena or that arena does not exist!=[!] Nincs adat ehez az arénához vagy az aréna nem létezik!
+
+# Others
+Spectator=Néző
+
